@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "CPU.h"
 #include "Memory.h"
 
 namespace chip8
@@ -15,6 +16,7 @@ namespace chip8
         void Run();
 
     private:
-        Memory m_memory;
+        Memory memory;
+        CPU cpu;
     };
 }

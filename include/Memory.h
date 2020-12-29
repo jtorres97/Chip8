@@ -17,6 +17,6 @@ namespace chip8
 		bool LoadRom(const std::vector<uint8_t>& rom);
 		
 	private:
-		std::array<uint8_t, 4 * 1024> m_memory;
+		std::array<uint8_t, 4 * 1024> memory;
 	};
 }

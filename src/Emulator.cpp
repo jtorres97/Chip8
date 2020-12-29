@@ -6,7 +6,7 @@
 
 namespace chip8
 {
-	Emulator::Emulator()
+	Emulator::Emulator(): cpu(memory)
 	{
 	}
 
@@ -24,10 +24,12 @@ namespace chip8
 		std::vector<uint8_t> rom(length);
 		inFile.read(reinterpret_cast<char*>(&rom[0]), length);
 
-		return m_memory.LoadRom(rom);
+		return memory.LoadRom(rom);
 	}
 
 	void Emulator::Run()
 	{
+		cpu.Execute();
+		cpu.UpdateTimers();
 	}
 }
