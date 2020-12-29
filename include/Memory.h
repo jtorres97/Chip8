@@ -15,6 +15,11 @@ namespace chip8
 		static constexpr uint16_t ProgramStart() { return 0x200; }
 
 		bool LoadRom(const std::vector<uint8_t>& rom);
+
+		uint8_t& operator[](uint16_t address)
+		{
+			return memory[address & 0xFFF];
+		}
 		
 	private:
 		std::array<uint8_t, 4 * 1024> memory;
