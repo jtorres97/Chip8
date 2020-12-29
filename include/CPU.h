@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <array>
+#include <random>
 
 namespace chip8
 {
@@ -18,6 +19,8 @@ namespace chip8
 		void Reset();
 
 	private:
+		[[nodiscard]] uint8_t Random() const;
+		
 		void OP_0nnn(uint16_t opcode); // Jump to machine code routine at nnn
 		void OP_00e0(uint16_t opcode); // Clear the display
 		void OP_00ee(uint16_t opcode); // Return from a subroutine
@@ -89,5 +92,8 @@ namespace chip8
 		uint8_t delayTimer;
 		uint8_t soundTimer;
 		uint8_t SP; // Stack pointer
+
+		mutable std::mt19937 engine;
+		mutable std::uniform_int_distribution<uint8_t> dist;
 	};
 }

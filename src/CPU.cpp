@@ -4,8 +4,10 @@
 
 namespace chip8
 {
-	CPU::CPU(Memory& memory, Display& display): memory(memory), display(display), I(0), PC(0), delayTimer(0), soundTimer(0), SP(0)
+	CPU::CPU(Memory& memory, Display& display): memory(memory), display(display), I(0), PC(0), delayTimer(0), soundTimer(0), SP(0), dist(0, 255)
 	{
+		std::random_device rd;
+		engine = std::mt19937(rd());
 	}
 
 	void CPU::Execute()
@@ -35,6 +37,10 @@ namespace chip8
 		soundTimer = 0;
 	}
 
+	uint8_t CPU::Random() const
+	{
+		return dist(engine);
+	}
 
 	void CPU::OP_0nnn(uint16_t opcode)
 	{
@@ -218,6 +224,10 @@ namespace chip8
 
 	void CPU::OP_cxnn(uint16_t opcode)
 	{
+		const uint8_t x = GetXNibble(opcode);
+		const uint8_t nn = LastTwoNibbles(opcode);
+
+		V[x] = Random() & nn;
 	}
 
 	void CPU::OP_dxyn(uint16_t opcode)
