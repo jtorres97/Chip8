@@ -206,10 +206,12 @@ namespace chip8
 
 	void CPU::OP_annn(uint16_t opcode)
 	{
+		I = LastThreeNibbles(opcode);
 	}
 
 	void CPU::OP_bnnn(uint16_t opcode)
 	{
+		PC = LastThreeNibbles(opcode) + V[0];
 	}
 
 	void CPU::OP_cxnn(uint16_t opcode)
@@ -230,6 +232,9 @@ namespace chip8
 
 	void CPU::OP_fx07(uint16_t opcode)
 	{
+		const uint8_t x = GetXNibble(opcode);
+
+		V[x] = delayTimer;
 	}
 
 	void CPU::OP_fx0a(uint16_t opcode)
@@ -238,14 +243,23 @@ namespace chip8
 
 	void CPU::OP_fx15(uint16_t opcode)
 	{
+		const uint8_t x = GetXNibble(opcode);
+
+		delayTimer = V[x];
 	}
 
 	void CPU::OP_fx18(uint16_t opcode)
 	{
+		const uint8_t x = GetXNibble(opcode);
+
+		soundTimer = V[x];
 	}
 
 	void CPU::OP_fx1e(uint16_t opcode)
 	{
+		const uint8_t x = GetXNibble(opcode);
+
+		I += V[x];
 	}
 
 	void CPU::OP_fx29(uint16_t opcode)
@@ -254,13 +268,34 @@ namespace chip8
 
 	void CPU::OP_fx33(uint16_t opcode)
 	{
+		const uint8_t x = GetXNibble(opcode);
+		const uint8_t Vx = V[x];
+		const uint8_t hundreds = Vx / 100;
+		const uint8_t tens = (Vx / 10) % 10;
+		const uint8_t ones = Vx % 10;
+
+		memory[I] = hundreds;
+		memory[I + 1] = tens;
+		memory[I + 2] = ones;
 	}
 
 	void CPU::OP_fx55(uint16_t opcode)
 	{
+		const uint8_t x = GetXNibble(opcode);
+
+		for (uint8_t reg = 0; reg <= x; reg++)
+		{
+			memory[I + reg] = V[reg];
+		}
 	}
 
 	void CPU::OP_fx65(uint16_t opcode)
 	{
+		const uint8_t x = GetXNibble(opcode);
+
+		for (uint8_t reg = 0; reg <= x; reg++)
+		{
+			V[reg] = memory[I + reg];
+		}
 	}
 }
