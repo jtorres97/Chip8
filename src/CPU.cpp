@@ -1,13 +1,39 @@
 #include "CPU.h"
 #include "Display.h"
 #include "Memory.h"
+#include "Keyboard.h"
 
 namespace chip8
 {
-	CPU::CPU(Memory& memory, Display& display): memory(memory), display(display), I(0), PC(0), delayTimer(0), soundTimer(0), SP(0), dist(0, 255)
+	CPU::CPU(Memory& memory, Display& display, Keyboard& keyboard): memory(memory), display(display),
+	                                                                keyboard(keyboard), I(0), PC(0), delayTimer(0),
+	                                                                soundTimer(0), SP(0), dist(0, 255)
 	{
 		std::random_device rd;
 		engine = std::mt19937(rd());
+
+		instructions = {
+			{
+				&CPU::OP_Misc, &CPU::OP_1nnn, &CPU::OP_2nnn, &CPU::OP_3xnn,
+				&CPU::OP_4xnn, &CPU::OP_5xy0, &CPU::OP_6xnn, &CPU::OP_7xnn,
+				&CPU::OP_Arith, &CPU::OP_9xy0, &CPU::OP_annn, &CPU::OP_bnnn,
+				&CPU::OP_cxnn, &CPU::OP_dxyn, &CPU::OP_Key, &CPU::OP_Special
+			}
+		};
+
+		arithmetic = {
+			{
+				&CPU::OP_8xy0, &CPU::OP_8xy1, &CPU::OP_8xy2, &CPU::OP_8xy3,
+				&CPU::OP_8xy4, &CPU::OP_8xy5, &CPU::OP_8xy6, &CPU::OP_8xy7,
+				&CPU::OP_8xye
+			}
+		};
+
+		special = {
+			{0x7, &CPU::OP_fx07}, {0xa, &CPU::OP_fx0a}, {0x15, &CPU::OP_fx15},
+			{0x18, &CPU::OP_fx18}, {0x1e, &CPU::OP_fx1e}, {0x29, &CPU::OP_fx29},
+			{0x33, &CPU::OP_fx33}, {0x55, &CPU::OP_fx55}, {0x65, &CPU::OP_fx65}
+		};
 	}
 
 	void CPU::Execute()
@@ -31,15 +57,31 @@ namespace chip8
 		stack.fill(0);
 		V.fill(0);
 		I = 0;
-		PC = chip8::Memory::ProgramStart();
+		PC = Memory::ProgramStart();
 		SP = 0;
 		delayTimer = 0;
 		soundTimer = 0;
 	}
 
-	uint8_t CPU::Random() const
+	uint16_t CPU::Random() const
 	{
 		return dist(engine);
+	}
+
+	void CPU::OP_Misc(uint16_t opcode)
+	{
+	}
+
+	void CPU::OP_Arith(uint16_t opcode)
+	{
+	}
+
+	void CPU::OP_Key(uint16_t opcode)
+	{
+	}
+
+	void CPU::OP_Special(uint16_t opcode)
+	{
 	}
 
 	void CPU::OP_0nnn(uint16_t opcode)
@@ -250,7 +292,7 @@ namespace chip8
 				const uint8_t Px = Vx + col;
 				const uint8_t Py = Vy + line;
 
-				const uint8_t bit = (sprite >> (7 - col)) && 0x1;
+				const uint8_t bit = (sprite >> (7 - col)) && true;
 				const uint8_t pixel = display.GetPixel(Px, Py);
 				const uint8_t result = pixel ^ bit;
 
@@ -262,10 +304,22 @@ namespace chip8
 
 	void CPU::OP_ex9e(uint16_t opcode)
 	{
+		const uint8_t x = GetXNibble(opcode);
+
+		if (keyboard.IsKeyPressed(V[x] & 0xF))
+		{
+			PC += 2;
+		}
 	}
 
 	void CPU::OP_exa1(uint16_t opcode)
 	{
+		const uint8_t x = GetXNibble(opcode);
+
+		if (!keyboard.IsKeyPressed(V[x] & 0xF))
+		{
+			PC += 2;
+		}
 	}
 
 	void CPU::OP_fx07(uint16_t opcode)

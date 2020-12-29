@@ -1,4 +1,4 @@
-#include "Emulator.h"
+#include "Chip8.h"
 
 #include <cstdint>
 #include <fstream>
@@ -6,11 +6,11 @@
 
 namespace chip8
 {
-	Emulator::Emulator(): cpu(memory, display)
+	Chip8::Chip8(): cpu(memory, display, keyboard)
 	{
 	}
 
-	bool Emulator::LoadRom(const std::string& file)
+	bool Chip8::LoadRom(const std::string& file)
 	{
 		std::ifstream inFile(file, std::ios_base::binary);
 		if (!inFile)
@@ -27,7 +27,7 @@ namespace chip8
 		return memory.LoadRom(rom);
 	}
 
-	void Emulator::Run()
+	void Chip8::Run()
 	{
 		cpu.Execute();
 		cpu.UpdateTimers();

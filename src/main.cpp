@@ -1,4 +1,4 @@
-#include "Emulator.h"
+#include "Chip8.h"
 
 #include <iostream>
 
@@ -10,7 +10,7 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	chip8::Emulator emulator;
+	chip8::Chip8 emulator;
 
 	if (!emulator.LoadRom(argv[1]))
 	{

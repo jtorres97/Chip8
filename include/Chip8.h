@@ -5,13 +5,14 @@
 #include "CPU.h"
 #include "Memory.h"
 #include "Display.h"
+#include "Keyboard.h"
 
 namespace chip8
 {
-    class Emulator 
+    class Chip8 
     {
     public:
-        Emulator();
+        Chip8();
 
         bool LoadRom(const std::string& file);
         void Run();
@@ -19,6 +20,7 @@ namespace chip8
     private:
         Memory memory;
         Display display;
+        Keyboard keyboard;
         CPU cpu;
     };
 }
