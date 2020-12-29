@@ -10,13 +10,21 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	chip8::Chip8 emulator;
-
-	if (!emulator.LoadRom(argv[1]))
+	try
 	{
-		std::cerr << "Failed to load ROM file.\n";
+		chip8::Chip8 emulator;
+
+		if (!emulator.LoadRom(argv[1]))
+		{
+			std::cerr << "Failed to load ROM file.\n";
+			return 1;
+		}
+
+		emulator.Run();
+	}
+	catch (std::exception& e)
+	{
+		std::cerr << e.what() << std::endl;
 		return 1;
 	}
-
-	emulator.Run();
 }

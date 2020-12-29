@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "Application.h"
 #include "CPU.h"
 #include "Memory.h"
 #include "Display.h"
@@ -9,7 +10,7 @@
 
 namespace chip8
 {
-    class Chip8 
+    class Chip8 : public Application
     {
     public:
         Chip8();
