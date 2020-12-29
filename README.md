@@ -8,6 +8,10 @@ To get up and running with this project you will need:
 * A somewhat recent [CMake](https://cmake.org/) version
 
 ## Compiling
+Before compiling you need to add the bincrafters remote to get the package(s) defined in the conanfile.
+```bash
+conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
+```
 Compiling this project is straight forward since there is a single CMake project in this repository.
 ### MSVC
 ```bash
