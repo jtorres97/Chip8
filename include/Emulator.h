@@ -4,6 +4,7 @@
 
 #include "CPU.h"
 #include "Memory.h"
+#include "Display.h"
 
 namespace chip8
 {
@@ -17,6 +18,7 @@ namespace chip8
 
     private:
         Memory memory;
+        Display display;
         CPU cpu;
     };
 }

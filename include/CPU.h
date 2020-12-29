@@ -6,11 +6,12 @@
 namespace chip8
 {
 	class Memory;
+	class Display;
 
 	class CPU
 	{
 	public:
-		CPU(Memory& memory);
+		CPU(Memory& memory, Display& display);
 
 		void Execute();
 		void UpdateTimers();
@@ -79,6 +80,7 @@ namespace chip8
 		}
 		
 		Memory& memory;
+		Display& display;
 		std::array<uint16_t, 16> stack;
 
 		std::array<uint8_t, 16> V; // General purpose registers

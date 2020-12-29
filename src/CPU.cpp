@@ -1,9 +1,10 @@
 #include "CPU.h"
+#include "Display.h"
 #include "Memory.h"
 
 namespace chip8
 {
-	CPU::CPU(Memory& memory): memory(memory), I(0), PC(0), delayTimer(0), soundTimer(0), SP(0)
+	CPU::CPU(Memory& memory, Display& display): memory(memory), display(display), I(0), PC(0), delayTimer(0), soundTimer(0), SP(0)
 	{
 	}
 
@@ -41,6 +42,7 @@ namespace chip8
 
 	void CPU::OP_00e0(uint16_t opcode)
 	{
+		display.Clear();
 	}
 
 	void CPU::OP_00ee(uint16_t opcode)
@@ -220,6 +222,32 @@ namespace chip8
 
 	void CPU::OP_dxyn(uint16_t opcode)
 	{
+		const uint8_t x = GetXNibble(opcode);
+		const uint8_t y = GetYNibble(opcode);
+		const uint8_t n = LastNibble(opcode);
+
+		const uint8_t Vx = V[x];
+		const uint8_t Vy = V[y];
+
+		V[0xF] = 0;
+
+		for (uint8_t line = 0; line < n; line++)
+		{
+			const uint8_t sprite = memory[I + line];
+			for (uint8_t col = 0; col < 8; col++)
+			{
+				// Pixel position on screen
+				const uint8_t Px = Vx + col;
+				const uint8_t Py = Vy + line;
+
+				const uint8_t bit = (sprite >> (7 - col)) && 0x1;
+				const uint8_t pixel = display.GetPixel(Px, Py);
+				const uint8_t result = pixel ^ bit;
+
+				V[0xF] |= pixel & bit;
+				display.SetPixel(Px, Py, result);
+			}
+		}
 	}
 
 	void CPU::OP_ex9e(uint16_t opcode)
