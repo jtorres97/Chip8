@@ -22,6 +22,7 @@ namespace chip8
 		void Reset();
 
 	private:
+		[[nodiscard]] uint16_t Fetch();
 		[[nodiscard]] uint16_t Random() const;
 
 		/*

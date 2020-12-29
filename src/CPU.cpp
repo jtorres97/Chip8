@@ -38,6 +38,10 @@ namespace chip8
 
 	void CPU::Execute()
 	{
+		const uint16_t opcode = Fetch();
+		const uint8_t index = (opcode >> 12) & 0xF;
+
+		(this->*instructions[index])(opcode);
 	}
 
 	void CPU::UpdateTimers()
@@ -61,6 +65,16 @@ namespace chip8
 		SP = 0;
 		delayTimer = 0;
 		soundTimer = 0;
+	}
+
+	uint16_t CPU::Fetch()
+	{
+		// Opcodes are stored in Big-Endian notation
+		const uint16_t opcode = (static_cast<uint16_t>(memory[PC]) << 8) | memory[PC + 1];
+
+		PC += 2;
+
+		return opcode;
 	}
 
 	uint16_t CPU::Random() const
