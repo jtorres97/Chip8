@@ -37,10 +37,10 @@ and replace `<CONFIG>` with the configuration you want, either `Debug` or `Relea
 
 ## Screenshots
 <p align="center">
-  <img src="/docs/test_opcode.jpg" width="450" />
-  <img src="/docs/pong.jpg" width="450" /> 
+  <img src="/docs/test_opcode.jpg" width="400" />
+  <img src="/docs/pong.jpg" width="400" /> 
 </p>
 <p align="center">
-    <img src="/docs/brix.jpg" width="450" /> 
-    <img src="/docs/space_invaders.jpg" width="450" /> 
+    <img src="/docs/brix.jpg" width="400" /> 
+    <img src="/docs/space_invaders.jpg" width="400" /> 
 </p>
