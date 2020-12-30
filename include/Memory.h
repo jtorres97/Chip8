@@ -9,10 +9,10 @@ namespace chip8
 	class Memory
 	{
 	public:
-		Memory() = default;
+		Memory();
 
-		// Program start address
 		static constexpr uint16_t ProgramStart() { return 0x200; }
+		static constexpr uint16_t FontStart() { return 0x50; }
 
 		bool LoadRom(const std::vector<uint8_t>& rom);
 
@@ -22,6 +22,8 @@ namespace chip8
 		}
 		
 	private:
+		void LoadFont();
+		
 		std::array<uint8_t, 4 * 1024> memory;
 	};
 }

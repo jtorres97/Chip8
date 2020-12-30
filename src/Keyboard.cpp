@@ -11,4 +11,17 @@ namespace chip8
 	{
 		return keys[key & 0xF];
 	}
+
+	int Keyboard::GetKeyPressed() const
+	{
+		for (size_t i = 0; i < keys.size(); i++)
+		{
+			if (IsKeyPressed(i))
+			{
+				return i;
+			}
+		}
+
+		return -1;
+	}
 }

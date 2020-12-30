@@ -375,6 +375,17 @@ namespace chip8
 
 	void CPU::OP_fx0a(uint16_t opcode)
 	{
+		const uint8_t x = GetXNibble(opcode);
+		const int key = keyboard.GetKeyPressed();
+
+		if (key < 0)
+		{
+			// Repeat this instruction until key pressed
+			PC -= 2;
+			return;
+		}
+
+		V[x] = static_cast<uint8_t>(key) & 0xF;
 	}
 
 	void CPU::OP_fx15(uint16_t opcode)
@@ -400,6 +411,10 @@ namespace chip8
 
 	void CPU::OP_fx29(uint16_t opcode)
 	{
+		const uint8_t x = GetXNibble(opcode);
+		const uint8_t Vx = V[x] & 0xF;
+
+		I = Memory::FontStart() + Vx * 5;
 	}
 
 	void CPU::OP_fx33(uint16_t opcode)
