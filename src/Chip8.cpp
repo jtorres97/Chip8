@@ -91,8 +91,8 @@ namespace chip8
 					if (event.key.keysym.sym == SDLK_ESCAPE)
 					{
 						quit = true;
+						break;
 					}
-					break;
 				case SDL_KEYUP:
 					HandleInput(event.key);
 					break;

@@ -3,6 +3,8 @@
 #include "Memory.h"
 #include "Keyboard.h"
 
+#include <stdexcept>
+
 namespace chip8
 {
 	CPU::CPU(Memory& memory, Display& display, Keyboard& keyboard): memory(memory), display(display),
@@ -130,6 +132,7 @@ namespace chip8
 
 	void CPU::OP_0nnn(uint16_t opcode)
 	{
+		throw std::runtime_error("Opcode 0NNN is not supported");
 	}
 
 	void CPU::OP_00e0(uint16_t opcode)
@@ -139,6 +142,14 @@ namespace chip8
 
 	void CPU::OP_00ee(uint16_t opcode)
 	{
+		if (SP == 0) 
+		{
+			throw std::runtime_error("Chip8 stack underflow");
+		}
+
+		// Based on cowgod's technical reference:
+		// The interpreter sets PC to the address at the top of the stack,
+		// then subtracts 1 from SP
 		PC = stack[SP--];
 	}
 
@@ -149,6 +160,14 @@ namespace chip8
 
 	void CPU::OP_2nnn(uint16_t opcode)
 	{
+		if (SP == stack.size() - 1) 
+		{
+			throw std::runtime_error("Chip8 stack overflow");
+		}
+
+		// Based on cowgod's technical reference:
+		// The interpreter increments SP, then puts the current PC
+		// on top of the stack
 		stack[++SP] = PC;
 
 		PC = LastThreeNibbles(opcode);
