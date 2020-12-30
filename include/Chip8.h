@@ -16,6 +16,8 @@ namespace chip8
     {
         using SDL_WindowPtr = std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)>;
         using SDL_RendererPtr = std::unique_ptr<SDL_Renderer, decltype(&SDL_DestroyRenderer)>;
+        using SDL_TexturePtr = std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)>;
+        using SDL_PixelFormatPtr = std::unique_ptr<SDL_PixelFormat, decltype(&SDL_FreeFormat)>;
     public:
         Chip8();
 
@@ -24,6 +26,8 @@ namespace chip8
 
     private:
         void Render();
+        void UpdateTexture();
+        void HandleInput(const SDL_KeyboardEvent& event);
     	
         Memory memory;
         Display display;
@@ -31,7 +35,9 @@ namespace chip8
         CPU cpu;
 
         SDL_WindowPtr window = SDL_WindowPtr(nullptr, SDL_DestroyWindow);
-        SDL_RendererPtr renderer = SDL_RendererPtr(nullptr, SDL_DestroyRenderer);;
+        SDL_RendererPtr renderer = SDL_RendererPtr(nullptr, SDL_DestroyRenderer);
+        SDL_TexturePtr texture = SDL_TexturePtr(nullptr, SDL_DestroyTexture);
+        SDL_PixelFormatPtr format = SDL_PixelFormatPtr(nullptr, SDL_FreeFormat);
 
         const size_t scale;
         const size_t width;
