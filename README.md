@@ -1,4 +1,4 @@
-# Chip 8
+# Chip8
 Yet another Chip 8 emulator/interpreter, written in modern C++
 
 ## Setup
@@ -34,3 +34,11 @@ cmake .. -DCMAKE_BUILD_TYPE=<CONFIG>
 cmake --build .
 ```
 and replace `<CONFIG>` with the configuration you want, either `Debug` or `Release`.
+
+## Screenshots
+<p align="center">
+  <img src="/docs/test_opcode.jpg" width="450" />
+  <img src="/docs/pong.jpg" width="450" /> 
+  <img src="/docs/brix.jpg" width="450" /> 
+  <img src="/docs/space_invaders.jpg" width="450" /> 
+</p>
