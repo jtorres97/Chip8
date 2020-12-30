@@ -84,18 +84,48 @@ namespace chip8
 
 	void CPU::OP_Misc(uint16_t opcode)
 	{
+		switch (LastThreeNibbles(opcode))
+		{
+		case 0x0e0:
+			OP_00e0(opcode);
+			return;
+		case 0x0ee:
+			OP_00ee(opcode);
+			return;
+		}
+
+		OP_0nnn(opcode);
 	}
 
 	void CPU::OP_Arith(uint16_t opcode)
 	{
+		const uint8_t nibble = LastNibble(opcode);
+		const uint8_t index = nibble == 0xe ? 8 : nibble;
+
+		(this->*arithmetic[index])(opcode);
 	}
 
 	void CPU::OP_Key(uint16_t opcode)
 	{
+		if (opcode & 0x1)
+		{
+			OP_exa1(opcode);
+			return;
+		}
+
+		OP_ex9e(opcode);
 	}
 
 	void CPU::OP_Special(uint16_t opcode)
 	{
+		auto it = special.find(LastTwoNibbles(opcode));
+
+		if (it != special.end())
+		{
+			auto handler = it->second;
+
+			(this->*handler)(opcode);
+		}
 	}
 
 	void CPU::OP_0nnn(uint16_t opcode)
