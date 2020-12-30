@@ -7,7 +7,10 @@
 
 namespace chip8
 {
-	Chip8::Chip8(): cpu(memory, display, keyboard), scale(10), width(Display::GetSizeX()), height(Display::GetSizeY())
+	Chip8::Chip8(): cpu(memory, display, keyboard), scale(10), width(Display::GetSizeX()), height(Display::GetSizeY()),
+	                instructionsPerSecond(840),
+	                timersFrequency(60),
+	                instructionsPerTimerUpdate(instructionsPerSecond / timersFrequency)
 	{
 		window = SDL_WindowPtr(SDL_CreateWindow("Chip8 Emulator (WIP)",
 		                                        SDL_WINDOWPOS_CENTERED,
@@ -67,11 +70,16 @@ namespace chip8
 
 	void Chip8::Run()
 	{
+		cpu.Reset();
+
+		const size_t dt = 1000 / timersFrequency;
 		bool quit = false;
 		SDL_Event event;
 
 		while (!quit)
 		{
+			const uint32_t ticks = SDL_GetTicks();
+			
 			while (SDL_PollEvent(&event))
 			{
 				switch (event.type)
@@ -83,20 +91,28 @@ namespace chip8
 					if (event.key.keysym.sym == SDLK_ESCAPE)
 					{
 						quit = true;
-						break;
 					}
+					break;
 				case SDL_KEYUP:
 					HandleInput(event.key);
 					break;
 				}
 			}
 
-			cpu.Execute();
 			cpu.UpdateTimers();
+
+			for (size_t i = 0; i < instructionsPerTimerUpdate; i++)
+			{
+				cpu.Execute();
+			}
 
 			Render();
 
-			SDL_Delay(1);
+			const uint32_t delta = SDL_GetTicks() - ticks;
+			if (delta < dt)
+			{
+				SDL_Delay(dt - delta);
+			}
 		}
 	}
 

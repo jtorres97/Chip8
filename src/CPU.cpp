@@ -100,7 +100,7 @@ namespace chip8
 	void CPU::OP_Arith(uint16_t opcode)
 	{
 		const uint8_t nibble = LastNibble(opcode);
-		const uint8_t index = nibble == 0xe ? 8 : nibble;
+		const uint8_t index = nibble == 0xE ? 8 : nibble;
 
 		(this->*arithmetic[index])(opcode);
 	}
@@ -336,7 +336,7 @@ namespace chip8
 				const uint8_t Px = Vx + col;
 				const uint8_t Py = Vy + line;
 
-				const uint8_t bit = (sprite >> (7 - col)) && true;
+				const uint8_t bit = (sprite >> (7 - col)) & 0x1;
 				const uint8_t pixel = display.GetPixel(Px, Py);
 				const uint8_t result = pixel ^ bit;
 

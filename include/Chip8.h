@@ -42,5 +42,9 @@ namespace chip8
         const size_t scale;
         const size_t width;
         const size_t height;
+
+        const size_t instructionsPerSecond;
+        const size_t timersFrequency;
+        const size_t instructionsPerTimerUpdate;
     };
 }
